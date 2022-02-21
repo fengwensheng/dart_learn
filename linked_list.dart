@@ -13,6 +13,17 @@ class Node<T> {
   }
 }
 
+class LinkedList<E> {
+  Node<E>? head;
+  Node<E>? tail;
+  bool get isEmpty => head == null;
+  @override
+  String toString() {
+    if (isEmpty) return 'Empty list';
+    return head.toString();
+  }
+}
+
 void linkedListByHand() {
   final node1 = Node<int>(value: 1);
   final node2 = Node(value: 2); //dart type infer
