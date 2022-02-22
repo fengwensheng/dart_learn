@@ -13,5 +13,6 @@ void main() {
   // print(balanceParentheses("(hello world"));
   // print(balanceParentheses("h((e))llo(world)()"));
 
-  linkedListByHand();
+  // linkedListByHand();
+  doPush();
 }

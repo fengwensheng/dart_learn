@@ -17,6 +17,12 @@ class LinkedList<E> {
   Node<E>? head;
   Node<E>? tail;
   bool get isEmpty => head == null;
+
+  void push(E value) {
+    this.head = Node(value: value, next: this.head);
+    tail ??= head;
+  }
+
   @override
   String toString() {
     if (isEmpty) return 'Empty list';
@@ -24,6 +30,7 @@ class LinkedList<E> {
   }
 }
 
+//eg
 void linkedListByHand() {
   final node1 = Node<int>(value: 1);
   final node2 = Node(value: 2); //dart type infer
@@ -32,4 +39,13 @@ void linkedListByHand() {
   node1.next = node2;
   node2.next = node3;
   print(node1);
+}
+
+void doPush() {
+  final list = LinkedList();
+  list
+    ..push(1)
+    ..push(2)
+    ..push(3);
+  print(list); //3 -> 2 -> 1
 }
