@@ -15,5 +15,6 @@ void main() {
 
   // linkedListByHand();
   // doPush();
-  doAppend();
+  // doAppend();
+  doInsertAfter();
 }

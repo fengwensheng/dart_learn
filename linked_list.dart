@@ -33,6 +33,25 @@ class LinkedList<E> {
     this.tail = this.tail!.next;
   }
 
+  //insert middle1: find node
+  Node<E>? nodeAt(int index) {
+    Node<E>? node = head;
+    for (int i = 0; i < index; i++) {
+      node = node?.next;
+    }
+    return node;
+  }
+
+  //insert middle2: insert after
+  Node<E> insertAfter(Node<E> curNode, E value) {
+    if (tail == curNode) {
+      append(value);
+      return tail!;
+    }
+    curNode.next = Node(value: value, next: curNode.next);
+    return curNode.next!;
+  }
+
   @override
   String toString() {
     if (isEmpty) return 'Empty list';
@@ -67,5 +86,15 @@ void doAppend() {
     ..append(1)
     ..append(2)
     ..append(3);
+  print(list); //1 -> 2 -> 3
+}
+
+void doInsertAfter() {
+  final list = LinkedList();
+  list
+    ..append(1)
+    ..append(2)
+    ..append(3); //1 -> 2 -> 3
+  list.insertAfter(list.nodeAt(1)!, 4); //1 -> 2 -> 4 -> 3
   print(list);
 }
