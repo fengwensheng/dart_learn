@@ -17,10 +17,20 @@ class LinkedList<E> {
   Node<E>? head;
   Node<E>? tail;
   bool get isEmpty => head == null;
-
+  //insert front
   void push(E value) {
     this.head = Node(value: value, next: this.head);
     tail ??= head;
+  }
+
+  //insert end
+  void append(E value) {
+    if (isEmpty) {
+      push(value);
+      return;
+    }
+    this.tail!.next = Node<E>(value: value);
+    this.tail = this.tail!.next;
   }
 
   @override
@@ -46,6 +56,16 @@ void doPush() {
   list
     ..push(1)
     ..push(2)
-    ..push(3);
+    ..push(3)
+    ..append(4);
   print(list); //3 -> 2 -> 1
+}
+
+void doAppend() {
+  final list = LinkedList();
+  list
+    ..append(1)
+    ..append(2)
+    ..append(3);
+  print(list);
 }
