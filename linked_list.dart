@@ -82,6 +82,22 @@ class LinkedList<E> {
     return node.value;
   }
 
+  ///remove middle
+  // E? removeAt(Node<E> targetNode) {
+  //   if (head == tail) return pop();
+  //   var preNode = head;
+  //   while (preNode!.next != targetNode) preNode = preNode.next;
+  //   preNode.next = targetNode.next;
+  //   return targetNode.value;
+  // }
+  E? removeAfter(Node<E> preNode) {
+    //target is tail 只有两个节点的情况 only two elements
+    if (preNode.next == tail) tail = preNode;
+    var targetNode = preNode.next!;
+    preNode.next = preNode.next!.next;
+    return targetNode.value;
+  }
+
   @override
   String toString() {
     if (isEmpty) return 'Empty list';
@@ -145,4 +161,12 @@ void doRemoveLast() {
     // ..append(2)
     ..append(3); //1 -> 2 -> 3
   print('${list.removeLast()}');
+}
+
+void doRemoveAfter() {
+  final list = LinkedList<int>();
+  list
+    ..append(3)
+    ..append(4); //1 -> 2 -> 3 -> 4
+  print(list..removeAfter(list.nodeAt(0)!));
 }
