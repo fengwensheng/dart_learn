@@ -18,12 +18,14 @@ class LinkedList<E> {
   Node<E>? tail;
   bool get isEmpty => head == null;
   //insert front
+  //O(1)
   void push(E value) {
     this.head = Node(value: value, next: this.head);
     tail ??= head;
   }
 
   //insert end
+  //O(1)
   void append(E value) {
     if (isEmpty) {
       push(value);
@@ -34,6 +36,7 @@ class LinkedList<E> {
   }
 
   //insert middle1: find node
+  //O(i)
   Node<E>? nodeAt(int index) {
     Node<E>? node = head;
     for (int i = 0; i < index; i++) {
@@ -43,6 +46,7 @@ class LinkedList<E> {
   }
 
   //insert middle2: insert after
+  //O(1)
   Node<E> insertAfter(Node<E> curNode, E value) {
     if (tail == curNode) {
       append(value);
@@ -50,6 +54,18 @@ class LinkedList<E> {
     }
     curNode.next = Node(value: value, next: curNode.next);
     return curNode.next!;
+  }
+
+  //******************
+  //******REMOVE******
+  //******************
+
+  ///pop, remove first
+  E? pop() {
+    if (isEmpty) return null;
+    Node<E> head = this.head!;
+    this.head = head.next;
+    return head.value;
   }
 
   @override
@@ -97,4 +113,13 @@ void doInsertAfter() {
     ..append(3); //1 -> 2 -> 3
   list.insertAfter(list.nodeAt(1)!, 4); //1 -> 2 -> 4 -> 3
   print(list);
+}
+
+void doPop() {
+  final list = LinkedList<int>();
+  list
+    ..append(1)
+    ..append(2)
+    ..append(3); //1 -> 2 -> 3
+  print('${list..pop()}'); //2 -> 3
 }
