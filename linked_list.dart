@@ -68,6 +68,20 @@ class LinkedList<E> {
     return head.value;
   }
 
+  ///removeLast, remove the tail element
+  E? removeLast() {
+    //length=0
+    // if (isEmpty) return null;
+    //length=1 (or length=0 in pop())
+    if (tail == head) return pop();
+    //length>1
+    var node = head;
+    while ((node!.next) != tail) node = node.next;
+    node.next = null;
+    tail = node;
+    return node.value;
+  }
+
   @override
   String toString() {
     if (isEmpty) return 'Empty list';
@@ -117,9 +131,18 @@ void doInsertAfter() {
 
 void doPop() {
   final list = LinkedList<int>();
-  list
-    ..append(1)
-    ..append(2)
-    ..append(3); //1 -> 2 -> 3
+  // list
+  //   ..append(1)
+  //   ..append(2)
+  //   ..append(3); //1 -> 2 -> 3
   print('${list..pop()}'); //2 -> 3
+}
+
+void doRemoveLast() {
+  final list = LinkedList<int>();
+  list
+    // ..append(1)
+    // ..append(2)
+    ..append(3); //1 -> 2 -> 3
+  print('${list.removeLast()}');
 }
