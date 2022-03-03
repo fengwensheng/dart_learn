@@ -13,10 +13,10 @@ class Node<T> {
   }
 }
 
-class LinkedList<E> {
+class LinkedList<E> extends Iterable {
   Node<E>? head;
   Node<E>? tail;
-  bool get isEmpty => head == null;
+  // bool get isEmpty => head == null;
   //insert front
   //O(1)
   void push(E value) {
@@ -60,7 +60,7 @@ class LinkedList<E> {
   //******REMOVE******
   //******************
 
-  ///pop, remove first
+  ///pop, remove first, O(1)
   E? pop() {
     if (isEmpty) return null;
     Node<E> head = this.head!;
@@ -68,7 +68,7 @@ class LinkedList<E> {
     return head.value;
   }
 
-  ///removeLast, remove the tail element
+  ///removeLast, remove the tail element, O(n) to locate to second-to-last
   E? removeLast() {
     //length=0
     // if (isEmpty) return null;
@@ -82,7 +82,7 @@ class LinkedList<E> {
     return node.value;
   }
 
-  ///remove middle
+  ///remove middle, O(1)
   // E? removeAt(Node<E> targetNode) {
   //   if (head == tail) return pop();
   //   var preNode = head;
@@ -92,6 +92,7 @@ class LinkedList<E> {
   // }
   E? removeAfter(Node<E> preNode) {
     //target is tail 只有两个节点的情况 only two elements
+    // preNode.next = null;
     if (preNode.next == tail) tail = preNode;
     var targetNode = preNode.next!;
     preNode.next = preNode.next!.next;
@@ -102,6 +103,40 @@ class LinkedList<E> {
   String toString() {
     if (isEmpty) return 'Empty list';
     return head.toString();
+  }
+
+  //******************
+  //*****ITERABLE*****
+  //******************
+
+  @override
+  Iterator get iterator => _LinkedListIterator<E>(this);
+
+  @override
+  bool get isEmpty => head == null;
+}
+
+class _LinkedListIterator<E> implements Iterator<E> {
+  final LinkedList<E> _linkedList;
+  Node<E>? _currentNode;
+  bool _firstPass = true;
+
+  _LinkedListIterator(this._linkedList);
+
+  @override
+  E get current => _currentNode!.value;
+
+  @override
+  bool moveNext() {
+    if (_linkedList.isEmpty) return false;
+    //first using the iterator
+    if (_firstPass) {
+      _currentNode = _linkedList.head;
+      _firstPass = false;
+    } else {
+      _currentNode = _currentNode?.next;
+    }
+    return _currentNode != null;
   }
 }
 
@@ -169,4 +204,13 @@ void doRemoveAfter() {
     ..append(3)
     ..append(4); //1 -> 2 -> 3 -> 4
   print(list..removeAfter(list.nodeAt(0)!));
+}
+
+void doIterate() {
+  final list = LinkedList();
+  list
+    ..append(1)
+    ..append(2)
+    ..append(3); //1 -> 2 -> 3
+  for (var e in list) print(e);
 }

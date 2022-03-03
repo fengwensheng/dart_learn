@@ -19,5 +19,6 @@ void main() {
   // doInsertAfter();
   // doPop();
   // doRemoveLast();
-  doRemoveAfter();
+  // doRemoveAfter();
+  doIterate();
 }
