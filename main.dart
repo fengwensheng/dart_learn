@@ -13,12 +13,15 @@ void main() {
   // print(balanceParentheses("(hello world"));
   // print(balanceParentheses("h((e))llo(world)()"));
 
-  // linkedListByHand();
+  // doLinkedListByHand();
   // doPush();
   // doAppend();
   // doInsertAfter();
   // doPop();
   // doRemoveLast();
   // doRemoveAfter();
-  doIterate();
+  // doIterate();
+  // doPrintInReverse();
+  // doFindMiddle();
+  doLLReverse();
 }

@@ -1,3 +1,5 @@
+import 'stack.dart';
+
 class Node<T> {
   T value;
   Node<T>? next; //null stand-for End
@@ -13,19 +15,19 @@ class Node<T> {
   }
 }
 
-class LinkedList<E> extends Iterable {
+class LinkedList<E> extends Iterable<E> {
   Node<E>? head;
   Node<E>? tail;
   // bool get isEmpty => head == null;
-  //insert front
-  //O(1)
+  ///insert front
+  ///O(1)
   void push(E value) {
     this.head = Node(value: value, next: this.head);
     tail ??= head;
   }
 
-  //insert end
-  //O(1)
+  ///insert end
+  ///O(1)
   void append(E value) {
     if (isEmpty) {
       push(value);
@@ -110,7 +112,7 @@ class LinkedList<E> extends Iterable {
   //******************
 
   @override
-  Iterator get iterator => _LinkedListIterator<E>(this);
+  Iterator<E> get iterator => _LinkedListIterator<E>(this);
 
   @override
   bool get isEmpty => head == null;
@@ -141,7 +143,7 @@ class _LinkedListIterator<E> implements Iterator<E> {
 }
 
 //eg
-void linkedListByHand() {
+void doLinkedListByHand() {
   final node1 = Node<int>(value: 1);
   final node2 = Node(value: 2); //dart type infer
   final node3 = Node(value: 3);
@@ -171,11 +173,7 @@ void doAppend() {
 }
 
 void doInsertAfter() {
-  final list = LinkedList();
-  list
-    ..append(1)
-    ..append(2)
-    ..append(3); //1 -> 2 -> 3
+  final list = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
   list.insertAfter(list.nodeAt(1)!, 4); //1 -> 2 -> 4 -> 3
   print(list);
 }
@@ -190,27 +188,73 @@ void doPop() {
 }
 
 void doRemoveLast() {
-  final list = LinkedList<int>();
-  list
-    // ..append(1)
-    // ..append(2)
-    ..append(3); //1 -> 2 -> 3
+  final list = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
   print('${list.removeLast()}');
 }
 
 void doRemoveAfter() {
-  final list = LinkedList<int>();
-  list
-    ..append(3)
-    ..append(4); //1 -> 2 -> 3 -> 4
+  final list = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
   print(list..removeAfter(list.nodeAt(0)!));
 }
 
 void doIterate() {
-  final list = LinkedList();
-  list
-    ..append(1)
-    ..append(2)
-    ..append(3); //1 -> 2 -> 3
+  final list = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
   for (var e in list) print(e);
+}
+
+//ex1
+void doPrintInReverse() {
+  final linkedList = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
+  Stack stack = Stack.of(linkedList);
+  while (stack.isNotEmpty) print(stack.pop());
+}
+
+//ex2
+// 1 -> 2 -> 3 -> 4 -> null
+// middle is 3
+// 1 -> 2 -> 3 -> null
+// middle is 2
+void doFindMiddle() {
+  final linkedList = getTestLinkedList([1, 2, 3, 4]); //1 -> 2 -> 3 -> 4
+  int? node;
+  while (linkedList.isNotEmpty) {
+    node = linkedList.pop();
+    if (linkedList.isEmpty) {
+      print(node);
+      return;
+    }
+    node = linkedList.removeLast();
+    if (linkedList.isEmpty) {
+      print(node);
+      return;
+    }
+  }
+}
+
+//ex3
+// before
+// 1 -> 2 -> 3 -> null
+// after
+// 3 -> 2 -> 1 -> null
+void doLLReverse() {
+  final linkedList = getTestLinkedList([1, 2, 3]); //1 -> 2 -> 3
+  final reversedList = LinkedList<int>();
+  while (linkedList.isNotEmpty) reversedList.push(linkedList.pop()!);
+  print(reversedList);
+}
+
+//ex4
+// original list
+// 1 -> 3 -> 3 -> 3 -> 4
+// list after removing all occurrences of 3
+// 1 -> 4
+void doRemoveAllOccur() {
+  final linkedList = getTestLinkedList([1, 3, 3, 3, 4]); //1 -> 3 -> 3 -> 3 -> 4
+  final targetNode = linkedList.nodeAt(1);
+}
+
+LinkedList<int> getTestLinkedList(List<int> list) {
+  LinkedList<int> linkedList = LinkedList<int>();
+  list.forEach(linkedList.append);
+  return linkedList;
 }
