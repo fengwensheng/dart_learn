@@ -310,6 +310,85 @@ class QueueDoubleStack<E> implements Queue<E> {
   String toString() => '${[..._leftStack.reversed, ..._rightStack]}';
 }
 
+/**
+ * challenge Double-End-Queue deque
+ * combine stack and queue
+ */
+enum Direction { front, back }
+
+abstract class Deque<E> {
+  bool get isEmpty;
+  E? peek(Direction from);
+  bool enqueue(E element, Direction to);
+  E? dequeue(Direction from);
+}
+
+///c1 List-Based Deque
+class DequeList<E> implements Deque<E> {
+  final List<E> _list = <E>[];
+
+  bool _isFrontOp(Direction op) => op == Direction.front;
+
+  ///O(n)
+  @override
+  E? dequeue(Direction from) => isEmpty
+      ? null
+      : (_isFrontOp(from) ? _list.removeAt(0) : _list.removeLast());
+
+  ///O(n)
+  @override
+  bool enqueue(E element, Direction to) {
+    if (_isFrontOp(to)) {
+      final newList = _list.reversed.toList();
+      newList.add(element);
+      _list
+        ..clear()
+        ..addAll(newList.reversed);
+    } else {
+      _list.add(element);
+    }
+    return true;
+  }
+
+  ///O(1)
+  @override
+  bool get isEmpty => _list.length == 0;
+
+  ///O(1)
+  @override
+  E? peek(Direction from) =>
+      isEmpty ? null : (_isFrontOp(from) ? _list.first : _list.last);
+
+  @override
+  String toString() => _list.toString();
+}
+
+///c2 Doubly-Linked-List-Based Deque
+///double vs single LL: removeLast
+class DequeDoublyLinkedList<E> implements Deque<E> {
+  @override
+  E? dequeue(Direction from) {
+    // TODO: implement dequeue
+    throw UnimplementedError();
+  }
+
+  @override
+  bool enqueue(E element, Direction to) {
+    // TODO: implement enqueue
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement isEmpty
+  bool get isEmpty => throw UnimplementedError();
+
+  @override
+  E? peek(Direction from) {
+    // TODO: implement peek
+    throw UnimplementedError();
+  }
+}
+
 void main() {
   //1
   // final Queue<int> queue = QueueList();
@@ -341,12 +420,23 @@ void main() {
   // print(_queueRingBuffer.dequeue());
 
   //4
-  Queue _queueDouleStack = QueueDoubleStack<int>();
-  _queueDouleStack
-    ..enqueue(1)
-    ..enqueue(2)
-    ..enqueue(3)
-    ..dequeue();
-  print(_queueDouleStack);
-  print(_queueDouleStack.peek);
+  // Queue _queueDouleStack = QueueDoubleStack<int>();
+  // _queueDouleStack
+  //   ..enqueue(1)
+  //   ..enqueue(2)
+  //   ..enqueue(3)
+  //   ..dequeue();
+  // print(_queueDouleStack);
+  // print(_queueDouleStack.peek);
+
+  //ch1
+  Deque deque = DequeList<int>();
+  deque
+    ..enqueue(1, Direction.back)
+    ..enqueue(2, Direction.back)
+    ..enqueue(3, Direction.front) //312
+    ..dequeue(Direction.back)
+    ..enqueue(5, Direction.front); //531
+
+  print(deque);
 }
