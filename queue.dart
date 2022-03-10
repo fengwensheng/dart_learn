@@ -86,6 +86,7 @@ class DoublyLinkedList<E> extends Iterable<E> implements LinkedList<E> {
   @override
   Node<E>? tail;
 
+  ///O(1)
   @override
   void append(E data) {
     final newEndNode = Node<E>(
@@ -202,7 +203,115 @@ class QueueDoublyLinkedList<E> implements Queue<E> {
   String toString() => '[${_doublyLinkedList.join(', ')}]';
 }
 
+/**
+ * RingBuffer-Based Implementation
+ */
+class RingBuffer<T> {
+  final List<T?> _list;
+  int _readIndex = 0;
+  int _writeIndex = 0;
+  int _size = 0; //indicates empty and full state
+
+  RingBuffer(int length) : this._list = List<T?>.filled(length, null);
+
+  bool get isEmpty => _size == 0;
+  bool get isFull => _size == _list.length;
+
+  void write(T element) {
+    if (isFull) throw Exception('Buffer is full!');
+    _list[_writeIndex] = element;
+    _size++;
+    _writeIndex = _advance(_writeIndex);
+  }
+
+  T? read() {
+    if (isEmpty) return null;
+    final ele = _list[_readIndex];
+    _size--;
+    _readIndex = _advance(_readIndex);
+    return ele;
+  }
+
+  ///get next step value for readIndex and writeIndex
+  int _advance(int value) => _size == _list.length ? 0 : value + 1;
+
+  T? get peek => isEmpty ? null : _list[_readIndex];
+
+  @override
+  String toString() =>
+      '\{\nread:${_readIndex},\nwrite:${_writeIndex},\n${_list}\n}\n';
+}
+
+class QueueRingBuffer<E> implements Queue<E> {
+  final RingBuffer<E> _ringBuffer;
+
+  QueueRingBuffer(int length) : this._ringBuffer = RingBuffer(length);
+
+  ///O(1)
+  @override
+  E? dequeue() => _ringBuffer.read();
+
+  ///O(1)
+  @override
+  bool enqueue(E e) {
+    if (_ringBuffer.isFull) {
+      return false;
+    } else {
+      _ringBuffer.write(e);
+      return true;
+    }
+  }
+
+  ///O(1)
+  @override
+  bool get isEmpty => _ringBuffer.isEmpty;
+
+  ///O(1)
+  @override
+  E? get peek => _ringBuffer.peek;
+
+  @override
+  String toString() => _ringBuffer.toString();
+}
+
+/**
+ * 4.Double-Stack Implementation
+ */
+class QueueDoubleStack<E> implements Queue<E> {
+  final _leftStack = <E>[];
+  final _rightStack = <E>[];
+  @override
+  E? dequeue() {
+    if (_leftStack.isEmpty) {
+      //move right to left
+      _leftStack.addAll(_rightStack.reversed);
+      _rightStack.clear();
+    }
+    if (_leftStack.isEmpty) return null;
+    return _leftStack.removeLast();
+  }
+
+  ///O(1), O(n)
+  @override
+  bool enqueue(E e) {
+    _rightStack.add(e);
+    return true;
+  }
+
+  ///O(1)
+  @override
+  bool get isEmpty => _leftStack.isEmpty && _rightStack.isEmpty;
+
+  ///O(1)
+  @override
+  E? get peek => _leftStack.isNotEmpty ? _leftStack.last : _rightStack.first;
+
+  @override
+  String toString() => '${[..._leftStack.reversed, ..._rightStack]}';
+}
+
 void main() {
+  //1
   // final Queue<int> queue = QueueList();
   // queue
   //   ..enqueue(1)
@@ -212,12 +321,32 @@ void main() {
   // print(queue);
   // print(queue.peek); //2
 
-  final queueDoublyLinkedList = QueueDoublyLinkedList<int>();
-  queueDoublyLinkedList
+  //2
+  // final queueDoublyLinkedList = QueueDoublyLinkedList<int>();
+  // queueDoublyLinkedList
+  //   ..enqueue(1)
+  //   ..enqueue(3)
+  //   ..enqueue(5)
+  //   ..dequeue(); //[1, 3, 5]
+  // print(queueDoublyLinkedList.toString()); //[3, 5]
+  // print(queueDoublyLinkedList.peek); //3
+
+  //3
+  // final _queueRingBuffer = QueueRingBuffer<int>(10);
+  // _queueRingBuffer
+  //   ..enqueue(1)
+  //   ..enqueue(2)
+  //   ..enqueue(3);
+  // print(_queueRingBuffer);
+  // print(_queueRingBuffer.dequeue());
+
+  //4
+  Queue _queueDouleStack = QueueDoubleStack<int>();
+  _queueDouleStack
     ..enqueue(1)
+    ..enqueue(2)
     ..enqueue(3)
-    ..enqueue(5)
-    ..dequeue(); //[1, 3, 5]
-  print(queueDoublyLinkedList.toString()); //[1, 3]
-  print(queueDoublyLinkedList.peek); //3
+    ..dequeue();
+  print(_queueDouleStack);
+  print(_queueDouleStack.peek);
 }
